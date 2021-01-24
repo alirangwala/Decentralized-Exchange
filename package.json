@@ -1,0 +1,25 @@
+{
+  "name": "decentralized-exchange",
+  "version": "1.0.0",
+  "description": "Building a decentralized exhange on the Ethereum smart contract to trade different tokens.",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alirangwala/Decentralized-Exchange.git"
+  },
+  "author": "Ali Rangwala",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alirangwala/Decentralized-Exchange/issues"
+  },
+  "homepage": "https://github.com/alirangwala/Decentralized-Exchange#readme",
+  "devDependencies": {
+    "@openzeppelin/test-helpers": "^0.5.10"
+  }
+}
