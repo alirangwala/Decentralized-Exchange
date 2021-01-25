@@ -1,8 +1,10 @@
-pragma solidity 0.6.3;
+// SPDX-License-Identifier: UNLICENSED
+
+pragma solidity 0.7.4;
 pragma experimental ABIEncoderV2;
 
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/IERC20.sol";
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
 
 contract Dex {
     using SafeMath for uint256;
@@ -45,7 +47,7 @@ contract Dex {
         uint256 date
     );
 
-    constructor() public {
+    constructor() {
         admin = msg.sender;
     }
 
@@ -122,7 +124,16 @@ contract Dex {
         }
         Order[] storage orders = orderBook[ticker][uint256(side)];
         orders.push(
-            Order(nextOrderId, msg.sender, side, ticker, amount, 0, price, now)
+            Order(
+                nextOrderId,
+                msg.sender,
+                side,
+                ticker,
+                amount,
+                0,
+                price,
+                block.timestamp
+            )
         );
         uint256 i = orders.length > 0 ? orders.length : 0;
         while (i > 0) {
@@ -168,7 +179,7 @@ contract Dex {
                 msg.sender,
                 matched,
                 orders[i].price,
-                now
+                block.timestamp
             );
             if (side == Side.SELL) {
                 traderBalances[msg.sender][ticker] = traderBalances[msg.sender][
