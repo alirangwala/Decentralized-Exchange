@@ -99,7 +99,6 @@ contract Dex {
             traderBalances[msg.sender][ticker] >= amount,
             "insufficient balance"
         );
-
         traderBalances[msg.sender][ticker] = traderBalances[msg.sender][ticker]
             .sub(amount);
         IERC20(tokens[ticker].tokenAddress).transfer(msg.sender, amount);
@@ -119,7 +118,7 @@ contract Dex {
         } else {
             require(
                 traderBalances[msg.sender][DAI] >= amount.mul(price),
-                "insufficient Dai balance"
+                "insufficient DAI balance"
             );
         }
         Order[] storage orders = orderBook[ticker][uint256(side)];
@@ -135,7 +134,7 @@ contract Dex {
                 block.timestamp
             )
         );
-        uint256 i = orders.length > 0 ? orders.length : 0;
+        uint256 i = orders.length > 0 ? orders.length - 1 : 0;
         while (i > 0) {
             if (side == Side.BUY && orders[i - 1].price > orders[i].price) {
                 break;
