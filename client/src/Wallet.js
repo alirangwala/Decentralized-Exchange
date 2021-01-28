@@ -13,9 +13,9 @@ const [amount, setAmount] = useState(0);
 const onSubmit = e => {
   e.preventDefault();
   if(direction === DIRECTION.DEPOSIT) {
-    deposit(amount)
+    deposit(amount);
   } else {
-    withdraw(amount)
+    withdraw(amount);
   }
 }
   return (

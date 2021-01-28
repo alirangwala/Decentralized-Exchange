@@ -8,15 +8,15 @@ function App({ web3, accounts, contracts }) {
   const [user, setUser] = useState({
     accounts: [],
     balances: {
-      tokenDex:0,
-      tokenWallet:0
+      tokenDex: 0,
+      tokenWallet: 0
     },
     selectedToken: undefined
   });
 
   const getBalances = async (account, token) => {
-    const tokenDex = await contracts.dex.method.traderBalances(account, web3.utils.fromAscii(token.ticker)).call();
-    const tokenWallet = await contracts[token.ticker].methods.balanceOF(account).call();
+    const tokenDex = await contracts.dex.methods.traderBalances(account, web3.utils.fromAscii(token.ticker)).call();
+    const tokenWallet = await contracts[token.ticker].methods.balanceOf(account).call();
     return {tokenDex, tokenWallet}
   }
 
@@ -26,7 +26,7 @@ function App({ web3, accounts, contracts }) {
 
   const deposit = async amount => {
     await contracts[user.selectedToken.ticker].methods
-    .approve(contracts.dex.options.addres, amount)
+    .approve(contracts.dex.options.address, amount)
     .send({from:user.accounts[0]})
     await contracts.dex.methods
     .deposit(amount, web3.utils.fromAscii(user.selectedToken.ticker))
@@ -37,7 +37,7 @@ function App({ web3, accounts, contracts }) {
 
   const withdraw = async amount => {
     await contracts[user.selectedToken.ticker].methods
-    .approve(contracts.dex.options.addres, amount)
+    .approve(contracts.dex.options.address, amount)
     .send({from:user.accounts[0]})
     await contracts.dex.methods
     .withdraw(amount, web3.utils.fromAscii(user.selectedToken.ticker))
@@ -71,9 +71,18 @@ function App({ web3, accounts, contracts }) {
           user={user}
           selectToken={selectToken}
         />
-
+<main className = 'container-fluid'>
+<div className = 'row'>
+  <div className = 'col-sm-4 first-col'>
+    <Wallet
+    user = {user}
+    deposit = {deposit}
+    withdraw = {withdraw}/>
       </div>
-    );
+      </div>
+</main>
+ </div>
+);
   }
 }
 
