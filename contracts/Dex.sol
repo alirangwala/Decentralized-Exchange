@@ -36,7 +36,7 @@ contract Dex {
     uint256 public nextTradeId;
     bytes32 constant DAI = bytes32("DAI");
 
-    event newTrade(
+    event NewTrade(
         uint256 tradeId,
         uint256 orderId,
         bytes32 indexed ticker,
@@ -54,7 +54,7 @@ contract Dex {
     function getOrders(bytes32 ticker, Side side)
         external
         view
-        returns (Order[] memory)
+        returns(Order[] memory)
     {
         return orderBook[ticker][uint256(side)];
     }
@@ -170,7 +170,7 @@ contract Dex {
             uint256 matched = (remaining > available) ? available : remaining;
             remaining = remaining.sub(matched);
             orders[i].filled = orders[i].filled.add(matched);
-            emit newTrade(
+            emit NewTrade(
                 nextTradeId,
                 orders[i].id,
                 ticker,
