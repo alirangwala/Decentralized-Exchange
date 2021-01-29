@@ -3,6 +3,8 @@ import Header from './Header.js'
 import Wallet from './Wallet.js'
 import NewOrder from './NewOrder.js'
 import AllOrders from './AllOrders.js'
+import MyOrders from './MyOrders.js'
+import AllTrades from './AllTrades.js'
 
 const SIDE = {
   BUY: 0,
@@ -25,6 +27,9 @@ const [orders, setOrders] = useState({
   sell: []
 })
 
+const [trades, setTrades] = useState([])
+const [listener, setListener] = useState(undefined)
+
   const getBalances = async (account, token) => {
     const tokenDex = await contracts.dex.methods.traderBalances(account, web3.utils.fromAscii(token.ticker)).call();
     const tokenWallet = await contracts[token.ticker].methods.balanceOf(account).call();
@@ -37,6 +42,24 @@ const getOrders = async token => {
     contracts.dex.methods.getOrders(web3.utils.fromAscii(token.ticker), SIDE.SELL).call()
   ])
 }
+
+const listenToTrades = token => {
+  const tradeIds = new Set();
+  setTrades([]);
+  const listener = contracts.dex.events.NewTrade({
+  filter:{ticker: web3.utils.fromAscii(token.ticker)},
+  fromBlock: 0
+})
+.on('data', newTrade => {
+if(tradeIds.has(newTrade.returnValues.tradeId)){
+  return
+  };
+  tradeIds.add(newTrade.returnValues.tradeId)
+  setTrades(trade => ([...trades, newTrade.returnValues]))
+});
+setListener(listener);
+}
+
   const selectToken = token => {
     setUser({ ...user, selectedToken: token })
   }
@@ -94,6 +117,7 @@ const createLimitOrder = async (amount, side, price) => {
         getBalances(accounts[0], tokens[0]),
         getOrders(tokens[0])
       ])
+      listenToTrades(tokens[0]);
       setTokens(tokens);
       setUser({ accounts, balances, selectedToken: tokens[0] })
       setOrders(orders);
@@ -105,14 +129,18 @@ const createLimitOrder = async (amount, side, price) => {
     const init = async () => {
         const [balances, orders] = await Promise.all([
         getBalances(accounts[0], user.selectedToken),
-        getOrders(user.selectedToken)
+        getOrders(user.selectedToken),
       ])
+      listenToTrades(user.selectedToken);
       setUser(user => ({...user, balances}))
       setOrders(orders);
     }
     if(typeof user.selectedToken  !== 'undefined') {
-    init();}
-  }, [user.selectedToken]);
+    init();
+    }
+  }, [user.selectedToken], ()=> {
+    listener.unsubscribe();
+  });
 
 
   if (typeof user.selectedToken === 'undefined') {
@@ -139,13 +167,27 @@ const createLimitOrder = async (amount, side, price) => {
       createLimitOrder = {createLimitOrder}/>
     ) :null }
       </div>
+
       {user.selectedToken.ticker !== 'DAI' ? (
         <div className = 'col-sm-8'>
+          <AllTrades
+          trades = {trades}/>
       <AllOrders
       orders = {orders}
       />
+      {/* <MyOrders
+      orders = {
+        {buy: orders.buy.filter(
+          order => order.trader.toLowerCase()=== user.accounts[0].toLowerCase()
+        ),
+        sell: orders.sell.filter(
+          order => order.trader.toLowerCase()=== user.accounts[0].toLowerCase()
+        ),
+        }
+      }/> */}
       </div>
     ) :null }
+
       </div>
 </main>
  </div>
