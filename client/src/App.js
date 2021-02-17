@@ -22,43 +22,44 @@ function App({ web3, accounts, contracts }) {
     },
     selectedToken: undefined
   });
-const [orders, setOrders] = useState({
-  buy: [],
-  sell: []
-})
+  const [orders, setOrders] = useState({
+    buy: [],
+    sell: []
+  })
 
-const [trades, setTrades] = useState([])
-const [listener, setListener] = useState(undefined)
+  const [trades, setTrades] = useState([])
+  const [listener, setListener] = useState(undefined)
 
   const getBalances = async (account, token) => {
     const tokenDex = await contracts.dex.methods.traderBalances(account, web3.utils.fromAscii(token.ticker)).call();
     const tokenWallet = await contracts[token.ticker].methods.balanceOf(account).call();
-    return {tokenDex, tokenWallet}
+    return { tokenDex, tokenWallet }
   }
 
-const getOrders = async token => {
-  const orders = await Promise.all([
-    contracts.dex.methods.getOrders(web3.utils.fromAscii(token.ticker), SIDE.BUY).call(),
-    contracts.dex.methods.getOrders(web3.utils.fromAscii(token.ticker), SIDE.SELL).call()
-  ])
-}
+  const getOrders = async token => {
+    const orders = await Promise.all([
+      contracts.dex.methods.getOrders(web3.utils.fromAscii(token.ticker), SIDE.BUY).call(),
+      contracts.dex.methods.getOrders(web3.utils.fromAscii(token.ticker), SIDE.SELL).call()
+    ])
+    return { buy: orders[0], sell: orders[1] };
+  }
 
-const listenToTrades = token => {
-  const tradeIds = new Set();
-  setTrades([]);
-  const listener = contracts.dex.events.NewTrade({
-  filter:{ticker: web3.utils.fromAscii(token.ticker)},
-  fromBlock: 0
-})
-.on('data', newTrade => {
-if(tradeIds.has(newTrade.returnValues.tradeId)){
-  return
-  };
-  tradeIds.add(newTrade.returnValues.tradeId)
-  setTrades(trade => ([...trades, newTrade.returnValues]))
-});
-setListener(listener);
-}
+  const listenToTrades = token => {
+    const tradeIds = new Set();
+    setTrades([]);
+    const listener = contracts.dex.events.NewTrade({
+      filter: { ticker: web3.utils.fromAscii(token.ticker) },
+      fromBlock: 0
+    })
+      .on('data', newTrade => {
+        if (tradeIds.has(newTrade.returnValues.tradeId)) {
+          return
+        };
+        tradeIds.add(newTrade.returnValues.tradeId)
+        setTrades(trade => ([...trades, newTrade.returnValues]))
+      });
+    setListener(listener);
+  }
 
   const selectToken = token => {
     setUser({ ...user, selectedToken: token })
@@ -66,44 +67,44 @@ setListener(listener);
 
   const deposit = async amount => {
     await contracts[user.selectedToken.ticker].methods
-    .approve(contracts.dex.options.address, amount)
-    .send({from:user.accounts[0]})
+      .approve(contracts.dex.options.address, amount)
+      .send({ from: user.accounts[0] })
     await contracts.dex.methods
-    .deposit(amount, web3.utils.fromAscii(user.selectedToken.ticker))
-    .send({from: user.accounts[0]})
+      .deposit(amount, web3.utils.fromAscii(user.selectedToken.ticker))
+      .send({ from: user.accounts[0] })
     const balances = await getBalances(user.accounts[0], user.selectedToken);
-    setUser(user=>({...user, balances}))
+    setUser(user => ({ ...user, balances }))
   }
 
   const withdraw = async amount => {
     await contracts[user.selectedToken.ticker].methods
-    .approve(contracts.dex.options.address, amount)
-    .send({from:user.accounts[0]})
+      .approve(contracts.dex.options.address, amount)
+      .send({ from: user.accounts[0] })
     await contracts.dex.methods
-    .withdraw(amount, web3.utils.fromAscii(user.selectedToken.ticker))
-    .send({from: user.accounts[0]})
+      .withdraw(amount, web3.utils.fromAscii(user.selectedToken.ticker))
+      .send({ from: user.accounts[0] })
     const balances = await getBalances(user.accounts[0], user.selectedToken);
-    setUser(user=>({...user, balances}))
+    setUser(user => ({ ...user, balances }))
   }
 
-const createMarketOrder = async (amount, side) => {
-  await contracts.dex.methods.createMarketOrder(web3.utils.fromAscii(user.selectedToken.ticker),
-  amount,
-  side)
-  .send({from: user.accounts[0]});
-  const orders = await getOrders(user.selectedToken);
-  setOrders(orders);
-}
+  const createMarketOrder = async (amount, side) => {
+    await contracts.dex.methods.createMarketOrder(web3.utils.fromAscii(user.selectedToken.ticker),
+      amount,
+      side)
+      .send({ from: user.accounts[0] });
+    const orders = await getOrders(user.selectedToken);
+    setOrders(orders);
+  }
 
-const createLimitOrder = async (amount, side, price) => {
-  await contracts.dex.methods.createLimitOrder(web3.utils.fromAscii(user.selectedToken.ticker),
-  amount,
-  price,
-  side)
-  .send({from: user.accounts[0]});
-  const orders = await getOrders(user.selectedToken);
-  setOrders(orders);
-}
+  const createLimitOrder = async (amount, side, price) => {
+    await contracts.dex.methods.createLimitOrder(web3.utils.fromAscii(user.selectedToken.ticker),
+      amount,
+      price,
+      side)
+      .send({ from: user.accounts[0] });
+    const orders = await getOrders(user.selectedToken);
+    setOrders(orders);
+  }
 
 
   useEffect(() => {
@@ -127,18 +128,18 @@ const createLimitOrder = async (amount, side, price) => {
 
   useEffect(() => {
     const init = async () => {
-        const [balances, orders] = await Promise.all([
+      const [balances, orders] = await Promise.all([
         getBalances(accounts[0], user.selectedToken),
         getOrders(user.selectedToken),
       ])
       listenToTrades(user.selectedToken);
-      setUser(user => ({...user, balances}))
+      setUser(user => ({ ...user, balances }))
       setOrders(orders);
     }
-    if(typeof user.selectedToken  !== 'undefined') {
-    init();
+    if (typeof user.selectedToken !== 'undefined') {
+      init();
     }
-  }, [user.selectedToken], ()=> {
+  }, [user.selectedToken], () => {
     listener.unsubscribe();
   });
 
@@ -154,44 +155,45 @@ const createLimitOrder = async (amount, side, price) => {
           user={user}
           selectToken={selectToken}
         />
-<main className = 'container-fluid'>
-<div className = 'row'>
-  <div className = 'col-sm-4 first-col'>
-    <Wallet
-    user = {user}
-    deposit = {deposit}
-    withdraw = {withdraw}/>
-    {user.selectedToken.ticker !== 'DAI' ? (
-      <NewOrder
-      createMarketOrder = {createMarketOrder}
-      createLimitOrder = {createLimitOrder}/>
-    ) :null }
-      </div>
+        <main className='container-fluid'>
+          <div className='row'>
+            <div className='col-sm-4 first-col'>
+              <Wallet
+                user={user}
+                deposit={deposit}
+                withdraw={withdraw} />
+              {user.selectedToken.ticker !== 'DAI' ? (
+                <NewOrder
+                  createMarketOrder={createMarketOrder}
+                  createLimitOrder={createLimitOrder} />
+              ) : null}
+            </div>
 
-      {user.selectedToken.ticker !== 'DAI' ? (
-        <div className = 'col-sm-8'>
-          <AllTrades
-          trades = {trades}/>
-      <AllOrders
-      orders = {orders}
-      />
-      {/* <MyOrders
-      orders = {
-        {buy: orders.buy.filter(
-          order => order.trader.toLowerCase()=== user.accounts[0].toLowerCase()
-        ),
-        sell: orders.sell.filter(
-          order => order.trader.toLowerCase()=== user.accounts[0].toLowerCase()
-        ),
-        }
-      }/> */}
-      </div>
-    ) :null }
+            {user.selectedToken.ticker !== 'DAI' ? (
+              <div className='col-sm-8'>
+                <AllTrades
+                  trades={trades} />
+                <AllOrders
+                  orders={orders}
+                />
+                <MyOrders
+                  orders={
+                    {
+                      buy: orders.buy.filter(
+                        order => order.trader.toLowerCase() === user.accounts[0].toLowerCase()
+                      ),
+                      sell: orders.sell.filter(
+                        order => order.trader.toLowerCase() === user.accounts[0].toLowerCase()
+                      ),
+                    }
+                  } />
+              </div>
+            ) : null}
 
+          </div>
+        </main>
       </div>
-</main>
- </div>
-);
+    );
   }
 }
 

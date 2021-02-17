@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Moment from 'react-moment'
 
-function AllOrders({orders}) {
+function AllOrders({ orders }) {
 
-const renderList = (orders, side, className) => {
-return (
+  const renderList = (orders, side, className) => {
+    return (
       <>
         <table className={`table table-striped mb-0 order-list ${className}`}>
           <thead>

@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import Dropdown from './Dropdown.js'
 
 const DIRECTION = {
   WITHDRAW: 'WITHDRAW',
