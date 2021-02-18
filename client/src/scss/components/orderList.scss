@@ -1,8 +1,8 @@
-
 .order-list {
   &.order-list-buy {
     .order-list-title {
       background-color: $green !important;
+      border-top: none !important;
     }
   }
   &.order-list-sell {
@@ -10,5 +10,5 @@
       background-color: $red !important;
     }
   }
-  color: $white;
+  color: $white !important;
 }

@@ -21,7 +21,7 @@ function Header({ user, tokens, contracts, selectToken }) {
         </div>
         <div className='col-sm-9'>
           <h1 className='header-title'>
-            Dex - <span className='contract-address'>Contract Address: <span className='address'>{contracts.dex.options.addres} </span></span>
+            Dex - <span className='contract-address'>Contract Address: <span className='address'>{contracts.dex.options.address} </span></span>
           </h1>
         </div>
       </div>

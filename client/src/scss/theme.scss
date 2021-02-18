@@ -7,7 +7,10 @@
   }
   thead {
     tr {
-      background-color: $black !important;
+      background-color: $black;
+      td {
+        background-color: $black;
+      }
     }
     th {
       border: none;
@@ -42,7 +45,7 @@
 }
 
 .btn-primary {
-  color: $white;
+  color: $black;
   background-color: $lightPurple;
   border-color: $lightPurple;
   &:hover {
@@ -52,11 +55,22 @@
 }
 
 .form-control {
-  background-color: rgb(40,40,40);
+  background-color: $dimBlack !important;
+  color: white;
+  border: none;
+  &:disabled {
+    background-color: rgb(20,20,20);
+    color: white;
+    border: none;
+  }
+}
+
+.form-input-control {
+  background-color: $lightBlack !important;
   color: white;
   border: none;
   &:focus {
-    background-color: rgb(40,40,40);
+    background-color: $lightBlack !important;
     color: white;
     border: none;
   }
@@ -66,7 +80,6 @@
     border: none;
   }
 }
-
 .input-group-append {
   .input-group-text {
     background-color: $black;

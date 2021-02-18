@@ -53,10 +53,10 @@ function App({ web3, accounts, contracts }) {
     })
       .on('data', newTrade => {
         if (tradeIds.has(newTrade.returnValues.tradeId)) {
-          return
+          return;
         };
         tradeIds.add(newTrade.returnValues.tradeId)
-        setTrades(trade => ([...trades, newTrade.returnValues]))
+        setTrades(trade => ([...trade, newTrade.returnValues]))
       });
     setListener(listener);
   }
@@ -122,8 +122,9 @@ function App({ web3, accounts, contracts }) {
       setTokens(tokens);
       setUser({ accounts, balances, selectedToken: tokens[0] })
       setOrders(orders);
-    }
+    };
     init();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -139,6 +140,7 @@ function App({ web3, accounts, contracts }) {
     if (typeof user.selectedToken !== 'undefined') {
       init();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.selectedToken], () => {
     listener.unsubscribe();
   });

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
 const TYPE = {
   LIMIT: 'LIMIT',
@@ -8,22 +8,23 @@ const SIDE = {
   BUY: 0,
   SELL: 1
 }
-function NewOrder({ createMarketOrder, createLimitOrder}) {
+function NewOrder({ createMarketOrder, createLimitOrder }) {
 
-const [order, setOrder] = useState({
-type: TYPE.LIMIT,
-side: SIDE.BUY,
-amount: '',
-price:''})
+  const [order, setOrder] = useState({
+    type: TYPE.LIMIT,
+    side: SIDE.BUY,
+    amount: '',
+    price: ''
+  })
 
-const onSubmit = e => {
-  e.preventDefault();
-  if(order.type === TYPE.MARKET) {
-    createMarketOrder(order.amount, order.side)
-  } else {
-    createLimitOrder(order.amount, order.price, order.side)
+  const onSubmit = e => {
+    e.preventDefault();
+    if (order.type === TYPE.MARKET) {
+      createMarketOrder(order.amount, order.side)
+    } else {
+      createLimitOrder(order.amount, order.price, order.side)
+    }
   }
-}
   return (
     <div id="orders" className="card">
       <h2 className="card-title">New Order</h2>
@@ -35,12 +36,12 @@ const onSubmit = e => {
               <button
                 type="button"
                 className={`btn btn-secondary ${order.type === TYPE.LIMIT ? 'active' : ''}`}
-                onClick={() => setOrder(order => ({ ...order, type: TYPE.LIMIT}))}
+                onClick={() => setOrder(order => ({ ...order, type: TYPE.LIMIT }))}
               >Limit</button>
               <button
                 type="button"
                 className={`btn btn-secondary ${order.type === TYPE.MARKET ? 'active' : ''}`}
-                onClick={() => setOrder(order => ({ ...order, type: TYPE.MARKET}))}
+                onClick={() => setOrder(order => ({ ...order, type: TYPE.MARKET }))}
               >Market</button>
             </div>
           </div>
@@ -52,12 +53,12 @@ const onSubmit = e => {
               <button
                 type="button"
                 className={`btn btn-secondary ${order.side === SIDE.BUY ? 'active' : ''}`}
-                onClick={() => setOrder(order => ({ ...order, side:  SIDE.BUY}))}
+                onClick={() => setOrder(order => ({ ...order, side: SIDE.BUY }))}
               >Buy</button>
               <button
                 type="button"
                 className={`btn btn-secondary ${order.side === SIDE.SELL ? 'active' : ''}`}
-                onClick={() => setOrder(order => ({ ...order, side:  SIDE.SELL}))}
+                onClick={() => setOrder(order => ({ ...order, side: SIDE.SELL }))}
               >Sell</button>
             </div>
           </div>
@@ -67,9 +68,9 @@ const onSubmit = e => {
           <div className="col-sm-8">
             <input
               type="text"
-              className="form-control"
+              className="form-input-control"
               id="order-amount"
-              onChange={({ target: { value }}) => setOrder(order => ({ ...order, amount: value}))}
+              onChange={({ target: { value } }) => setOrder(order => ({ ...order, amount: value }))}
             />
           </div>
         </div>
@@ -79,9 +80,9 @@ const onSubmit = e => {
             <div className="col-sm-8">
               <input
                 type="text"
-                className="form-control"
+                className="form-input-control"
                 id="order-price"
-                onChange={({ target: { value }}) => setOrder(order => ({ ...order, price: value}))}
+                onChange={({ target: { value } }) => setOrder(order => ({ ...order, price: value }))}
               />
             </div>
           </div>

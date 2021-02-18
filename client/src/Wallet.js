@@ -1,24 +1,24 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
 const DIRECTION = {
   WITHDRAW: 'WITHDRAW',
   DEPOSIT: 'DEPOSIT'
 }
-function Wallet({ deposit, withdraw, user}) {
+function Wallet({ deposit, withdraw, user }) {
 
-const [direction, setDirection] = useState(DIRECTION.DEPOSIT)
-const [amount, setAmount] = useState(0);
+  const [direction, setDirection] = useState(DIRECTION.DEPOSIT)
+  const [amount, setAmount] = useState(0);
 
-const onSubmit = e => {
-  e.preventDefault();
-  if(direction === DIRECTION.DEPOSIT) {
-    deposit(amount);
-  } else {
-    withdraw(amount);
+  const onSubmit = e => {
+    e.preventDefault();
+    if (direction === DIRECTION.DEPOSIT) {
+      deposit(amount);
+    } else {
+      withdraw(amount);
+    }
   }
-}
   return (
-      <div id="wallet" className="card">
+    <div id="wallet" className="card">
       <h2 className="card-title">Wallet</h2>
       <h3>Token balance for {user.selectedToken.ticker}</h3>
       <div className="form-group row">
@@ -69,7 +69,7 @@ const onSubmit = e => {
               <input
                 id="amount"
                 type="text"
-                className="form-control"
+                className="form-input-control"
                 onChange={(e) => setAmount(e.target.value)}
               />
               <div className="input-group-append">

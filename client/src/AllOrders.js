@@ -35,7 +35,7 @@ function AllOrders({ orders }) {
 
   return (
     <div className="card">
-      <h2 className="card-title">All orders</h2>
+      <h2 className="card-title">All Orders</h2>
       <div className="row">
         <div className="col-sm-6">
           {renderList(orders.buy, 'Buy', 'order-list-buy')}

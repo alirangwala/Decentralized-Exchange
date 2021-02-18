@@ -1,7 +1,7 @@
 import React from 'react';
 import Moment from 'react-moment'
 
-function MyOrders({orders}) {
+function MyOrders({ orders }) {
   const renderList = (orders, side, className) => {
     return (
       <>
@@ -34,7 +34,7 @@ function MyOrders({orders}) {
 
   return (
     <div id="order-list" className="card">
-      <h2 className="card-title">My orders</h2>
+      <h2 className="card-title">My Orders</h2>
       <div className="row">
         <div className="col-sm-6">
           {renderList(orders.buy, 'Buy', 'order-list-buy')}
