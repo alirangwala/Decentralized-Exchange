@@ -1,12 +1,12 @@
 # Decentralized-Exchange
-Building a decentralized exchange on the Ethereum smart contract to trade different tokens.
+This is a decentralized exchange on the Ethereum blockchain that allows you to trade some tokens and make market and limit orders.
 
 To start:
---clone repository
---npm install
---truffle develop
---migrate -reset
---npm run build
---npm run start
+-`clone repository`
+-`npm install`
+-`truffle develop`
+-`migrate -reset`
+-`npm run build`
+-`npm run start`
 
 

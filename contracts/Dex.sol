@@ -54,7 +54,7 @@ contract Dex {
     function getOrders(bytes32 ticker, Side side)
         external
         view
-        returns(Order[] memory)
+        returns (Order[] memory)
     {
         return orderBook[ticker][uint256(side)];
     }
